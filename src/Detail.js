@@ -1,12 +1,23 @@
 /*eslint-disable*/
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import styled from "styled-components";
 
-let 박스 = styled.div``;
-
 function Detail(props) {
+  let [경고창, 경고창변경] = useState(true);
+  let [입력값, 입력값변경] = useState("");
+
+  useEffect(() => {
+    let 타이머 = setTimeout(() => {
+      경고창변경(false);
+      console.log("안녕");
+    }, 2000);
+    return () => {
+      clearTimeout(타이머);
+    };
+  }, []);
+
   let { id } = useParams();
   let imgIndex = parseInt(id) + 1;
   let history = useHistory();
@@ -14,6 +25,17 @@ function Detail(props) {
 
   return (
     <div className="container">
+      <h2 className="container__title">Detail</h2>
+      <input
+        onChange={(e) => {
+          입력값변경(e.target.value);
+        }}
+      />
+      {
+        //
+        경고창 === true ? <Alert /> : null
+      }
+
       <div className="row">
         <div className="col-md-6">
           <img
@@ -40,6 +62,10 @@ function Detail(props) {
       </div>
     </div>
   );
+}
+
+function Alert() {
+  return <p className="alert__text">재고가 얼마 남지 않았습니다.</p>;
 }
 
 export default Detail;
