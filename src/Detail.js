@@ -11,7 +11,6 @@ function Detail(props) {
   useEffect(() => {
     let 타이머 = setTimeout(() => {
       경고창변경(false);
-      console.log("안녕");
     }, 2000);
     return () => {
       clearTimeout(타이머);
@@ -22,6 +21,15 @@ function Detail(props) {
   let imgIndex = parseInt(id) + 1;
   let history = useHistory();
   const 찾은상품 = props.shoes.find((obj) => obj.id == id);
+
+  function 재고관리() {
+    if (props.재고[0] <= 0) {
+      return;
+    }
+    let newArr = [...props.재고];
+    newArr[0] = newArr[0] - 1;
+    new props.재고변경(newArr);
+  }
 
   return (
     <div className="container">
@@ -49,7 +57,10 @@ function Detail(props) {
           <h4 className="pt-5">{찾은상품.title}</h4>
           <p>{찾은상품.content}</p>
           <p>{찾은상품.price}원</p>
-          <button className="btn btn-danger">주문하기</button>
+          <Info 재고={props.재고} />
+          <button className="btn btn-danger" onClick={재고관리}>
+            주문하기
+          </button>
           <button
             className="btn btn-danger"
             onClick={() => {
@@ -62,6 +73,10 @@ function Detail(props) {
       </div>
     </div>
   );
+}
+
+function Info(props) {
+  return <div>재고 : {props.재고[0]}</div>;
 }
 
 function Alert() {
