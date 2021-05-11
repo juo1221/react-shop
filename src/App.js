@@ -10,11 +10,12 @@ import "./Detail.scss";
 import axios from "axios";
 
 function App() {
-  let [shoes, shoes변경] = useState(Data);
-  let [요청결과, 요청결과변경] = useState(true);
-  let [버튼숨김, 버튼숨김변경] = useState(false);
-  let [로딩, 로딩변경] = useState(false);
-  let [재고, 재고변경] = useState([10, 11, 12]);
+  const [shoes, shoes변경] = useState(Data);
+  const [요청결과, 요청결과변경] = useState(true);
+  const [버튼숨김, 버튼숨김변경] = useState(false);
+  const [로딩, 로딩변경] = useState(false);
+  const [재고, 재고변경] = useState([10, 11, 12]);
+  const [상세페이지번호, 상세페이지번호변경] = useState(1);
 
   return (
     <div className="App">
@@ -30,7 +31,17 @@ function App() {
             <Nav.Link as={Link} to="/">
               Home
             </Nav.Link>
-            <Nav.Link as={Link} to="/detail">
+            <Nav.Link
+              as={Link}
+              to="/detail/0"
+              onClick={() => {
+                axios
+                  .get("https://codingapple1.github.io/shop/data2.json")
+                  .then((result) => {
+                    shoes변경([...shoes, ...result.data]);
+                  });
+              }}
+            >
               Detail
             </Nav.Link>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
@@ -64,6 +75,7 @@ function App() {
           <div className="container">
             <div className="row">
               {shoes.map((신발, index) => {
+                console.log(신발);
                 return (
                   <신발카드
                     key={index}
@@ -109,7 +121,15 @@ function App() {
         {/* detail */}
 
         <Route path="/detail/:id">
-          <Detail shoes={shoes} 재고={재고} 재고변경={재고변경} />
+          <Detail
+            shoes={shoes}
+            shoes변경={shoes변경}
+            버튼숨김변경={버튼숨김변경}
+            재고={재고}
+            재고변경={재고변경}
+            상세페이지번호={상세페이지번호}
+            상세페이지번호변경={상세페이지번호변경}
+          />
         </Route>
       </Switch>
     </div>
