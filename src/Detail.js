@@ -6,9 +6,9 @@ import { useHistory, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { 재고context } from "./App.js";
 import { CSSTransition } from "react-transition-group";
+import { connect } from "react-redux";
 
 function Detail(props) {
-  console.log("hi");
   const [경고창, 경고창변경] = useState(true);
   const [입력값, 입력값변경] = useState("");
   const 재고 = useContext(재고context);
@@ -41,16 +41,18 @@ function Detail(props) {
     const newArr = [...재고];
     newArr[0] = newArr[0] - 1;
     props.재고변경(newArr);
+
+    props.dispatch({
+      type: "항목추가",
+      데이터: { 상품명: "새로운상품", 가격: "새로운가격", 수량: 1 },
+    });
+    history.push("/cart");
   }
 
   return (
     <div className="container">
       <h2 className="container__title">Detail</h2>
-      <input
-        onChange={(e) => {
-          입력값변경(e.target.value);
-        }}
-      />
+
       {
         //
         경고창 === true ? <Alert /> : null
@@ -160,4 +162,12 @@ function Alert() {
   return <p className="alert__text">재고가 얼마 남지 않았습니다.</p>;
 }
 
-export default Detail;
+function props화시키기(state) {
+  console.log(state);
+  return {
+    상품들: state.reducer,
+    alert창: state.reducer2,
+  };
+}
+
+export default connect(props화시키기)(Detail);

@@ -20,7 +20,7 @@ function Cart(props) {
             {props.상품들.map((상품, index) => {
               return (
                 <tr key={index}>
-                  <td>{index + 1}</td>
+                  <td>{상품.id}</td>
                   <td>{상품.상품명}</td>
                   <td>{상품.가격} </td>
                   <td>{상품.수량} </td>
