@@ -2,12 +2,15 @@
 
 import "./App.css";
 import { Navbar, Nav, NavDropdown, Button, Jumbotron } from "react-bootstrap";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Data from "./data.js";
 import { Link, Route, Switch } from "react-router-dom";
 import Detail from "./Detail.js";
 import "./Detail.scss";
 import axios from "axios";
+import Cart from "./Cart.js";
+
+export let 재고context = React.createContext();
 
 function App() {
   const [shoes, shoes변경] = useState(Data);
@@ -16,6 +19,14 @@ function App() {
   const [로딩, 로딩변경] = useState(false);
   const [재고, 재고변경] = useState([10, 11, 12]);
   const [상세페이지번호, 상세페이지번호변경] = useState(1);
+
+  function 데이터받아오기() {
+    axios
+      .get("https://codingapple1.github.io/shop/data2.json")
+      .then((result) => {
+        shoes변경([...shoes, ...result.data]);
+      });
+  }
 
   return (
     <div className="App">
@@ -31,19 +42,13 @@ function App() {
             <Nav.Link as={Link} to="/">
               Home
             </Nav.Link>
-            <Nav.Link
-              as={Link}
-              to="/detail/0"
-              onClick={() => {
-                axios
-                  .get("https://codingapple1.github.io/shop/data2.json")
-                  .then((result) => {
-                    shoes변경([...shoes, ...result.data]);
-                  });
-              }}
-            >
+            <Nav.Link as={Link} to="/cart">
+              Cart
+            </Nav.Link>
+            <Nav.Link as={Link} to="/detail/0" onClick={데이터받아오기}>
               Detail
             </Nav.Link>
+
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
@@ -62,7 +67,7 @@ function App() {
       {/* main */}
       <Switch>
         <Route exact path="/">
-          <Jumbotron className="background ">
+          <Jumbotron className="main__background ">
             <h1>20% Season OFF</h1>
             <p>
               This is a simple hero unit, a simple jumbotron-style component for
@@ -75,7 +80,6 @@ function App() {
           <div className="container">
             <div className="row">
               {shoes.map((신발, index) => {
-                console.log(신발);
                 return (
                   <신발카드
                     key={index}
@@ -121,15 +125,20 @@ function App() {
         {/* detail */}
 
         <Route path="/detail/:id">
-          <Detail
-            shoes={shoes}
-            shoes변경={shoes변경}
-            버튼숨김변경={버튼숨김변경}
-            재고={재고}
-            재고변경={재고변경}
-            상세페이지번호={상세페이지번호}
-            상세페이지번호변경={상세페이지번호변경}
-          />
+          <재고context.Provider value={재고}>
+            <Detail
+              shoes={shoes}
+              shoes변경={shoes변경}
+              버튼숨김변경={버튼숨김변경}
+              재고변경={재고변경}
+              상세페이지번호={상세페이지번호}
+              상세페이지번호변경={상세페이지번호변경}
+            />
+          </재고context.Provider>
+        </Route>
+
+        <Route path="/cart">
+          <Cart />
         </Route>
       </Switch>
     </div>
