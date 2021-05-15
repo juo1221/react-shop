@@ -2,9 +2,9 @@
 
 import "./App.css";
 import { Navbar, Nav, NavDropdown, Button, Jumbotron } from "react-bootstrap";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Data from "./data.js";
-import { Link, Route, Switch } from "react-router-dom";
+import { Link, Route, Switch, useHistory } from "react-router-dom";
 import Detail from "./Detail.js";
 import "./Detail.scss";
 import axios from "axios";
@@ -17,10 +17,10 @@ function App() {
   const [요청결과, 요청결과변경] = useState(true);
   const [버튼숨김, 버튼숨김변경] = useState(false);
   const [로딩, 로딩변경] = useState(false);
-  const [재고, 재고변경] = useState([10, 11, 12]);
-  const [상세페이지번호, 상세페이지번호변경] = useState(1);
+  const [재고, 재고변경] = useState([10, 17, 2, 5, 9, 1]);
 
   function 데이터받아오기() {
+    console.log("hi");
     axios
       .get("https://codingapple1.github.io/shop/data2.json")
       .then((result) => {
@@ -83,10 +83,11 @@ function App() {
                 return (
                   <신발카드
                     key={index}
+                    id={신발.id}
                     title={신발.title}
-                    price={신발.price}
                     content={신발.content}
-                    i={index + 1}
+                    i={index}
+                    데이터받아오기={데이터받아오기}
                   />
                 );
               })}
@@ -107,7 +108,7 @@ function App() {
                       요청결과변경(true);
                       버튼숨김변경(true);
                       로딩변경(false);
-                    }, 3000);
+                    }, 1000);
                   })
                   .catch(() => {
                     로딩변경(false);
@@ -119,20 +120,21 @@ function App() {
             </button>
           ) : null}
 
-          {요청결과 === false ? <요청실패창 /> : null}
+          {
+            //
+            요청결과 === false ? <요청실패창 /> : null
+          }
         </Route>
 
         {/* detail */}
 
-        <Route path="/detail/:id">
+        <Route path="/detail/:urlId">
           <재고context.Provider value={재고}>
             <Detail
               shoes={shoes}
               shoes변경={shoes변경}
               버튼숨김변경={버튼숨김변경}
               재고변경={재고변경}
-              상세페이지번호={상세페이지번호}
-              상세페이지번호변경={상세페이지번호변경}
             />
           </재고context.Provider>
         </Route>
@@ -162,15 +164,23 @@ function 요청실패창() {
 }
 
 function 신발카드(props) {
+  let history = useHistory();
   return (
-    <div className="col-md-4">
+    <div
+      className="col-md-4"
+      onClick={() => {
+        props.데이터받아오기();
+        history.push("/detail/" + props.id);
+      }}
+    >
       <img
-        src={"https://codingapple1.github.io/shop/shoes" + props.i + ".jpg"}
+        src={
+          "https://codingapple1.github.io/shop/shoes" + (props.i + 1) + ".jpg"
+        }
         width="100%"
       />
       <h4>{props.title}</h4>
       <p>{props.content}</p>
-      <p>{props.price} 원</p>
     </div>
   );
 }

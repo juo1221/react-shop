@@ -19,48 +19,101 @@ function reducer2(state = alert초기값, 액션) {
   }
 }
 
-let 초기값 = [
-  // { id: 1, 상품명: "에어포스1", 가격: "129,000", 수량: 7 },
-  // { id: 2, 상품명: "오즈위고", 가격: "130,000", 수량: 10 },
-  // { id: 3, 상품명: "반스", 가격: "70,000", 수량: 23 },
-  // { id: 4, 상품명: "닥터마틴", 가격: "200,000", 수량: 2 },
-];
+function 항목추가(state, 액션) {
+  const copy = [...state];
+  const 찾은항목 = copy.find((obj) => {
+    return obj.id === 액션.데이터.id && obj.사이즈 === 액션.데이터.사이즈;
+  });
 
-function reducer(state = 초기값, 액션) {
-  if (액션.type === "항목추가") {
-    let copy = [...state];
+  if (찾은항목 === undefined) {
     copy.push(액션.데이터);
+  } else {
+    찾은항목.수량++;
+  }
+  return copy;
+}
+function 수량증가(state, 액션) {
+  const copy = [...state];
+
+  const 찾은항목 = copy.find((obj) => {
+    return obj.id === 액션.데이터.id && obj.사이즈 === 액션.데이터.사이즈;
+  });
+  찾은항목.수량++;
+  return copy;
+}
+
+function 수량감소(state, 액션) {
+  let copy = [...state];
+  const 찾은항목 = copy.find((obj) => {
+    return obj.id === 액션.데이터.id && obj.사이즈 === 액션.데이터.사이즈;
+  });
+
+  if (찾은항목.수량 <= 0) {
+    찾은항목.수량 = 0;
     return copy;
   }
-  if (액션.type === "수량증가") {
-    let copy = [...state];
-    copy[0].수량++;
-    return copy;
-  } else if (액션.type === "수량감소") {
-    let copy = [...state];
+  찾은항목.수량--;
+  return copy;
+}
 
-    if (copy[0].수량 <= 0) {
-      copy[0].수량 = 0;
-      return copy;
+function 삭제(state, 액션) {
+  let copy = [...state];
+  const 찾은인덱스 = copy.findIndex((obj) => obj.id === 액션.데이터.id);
+  copy.splice(찾은인덱스, 1);
+  return copy;
+}
+
+// let arr = ["l", "s", "m"];
+// arr.sort((next, prev) => (next > prev ? -1 : 0));
+// console.log(arr);
+
+function 정렬(state) {
+  let copy = [...state];
+  copy.sort((next, prev) => {
+    if (prev.id > next.id) {
+      return -1;
+    } else if (prev.id === next.id && next.사이즈 > prev.사이즈) {
+      return -1;
+    } else {
+      return 0;
     }
+  });
+  console.log(copy);
+  return copy;
+}
 
-    copy[0].수량--;
-    return copy;
-  } else {
-    return state;
+let 초기값 = [];
+
+function reducer(state = 초기값, 액션) {
+  switch (액션.type) {
+    case "항목추가":
+      return 항목추가(state, 액션);
+
+    case "수량증가":
+      return 수량증가(state, 액션);
+
+    case "수량감소":
+      return 수량감소(state, 액션);
+
+    case "삭제":
+      return 삭제(state, 액션);
+
+    case "정렬":
+      return 정렬(state);
+
+    default:
+      return state;
   }
 }
 
 let store = createStore(combineReducers({ reducer, reducer2 }));
 
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </BrowserRouter>
-  </React.StrictMode>,
+  <BrowserRouter>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </BrowserRouter>,
   document.getElementById("root")
 );
 

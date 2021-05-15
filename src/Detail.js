@@ -10,10 +10,10 @@ import { connect } from "react-redux";
 
 function Detail(props) {
   const [경고창, 경고창변경] = useState(true);
-  const [입력값, 입력값변경] = useState("");
   const 재고 = useContext(재고context);
-  const [누른탭, 누른탭변경] = useState(0);
+  const [누른탭, 누른탭변경] = useState("상품정보");
   const [스위치, 스위치변경] = useState(false);
+  const [사이즈, 사이즈변경] = useState("S");
 
   useEffect(() => {
     const 타이머 = setTimeout(() => {
@@ -29,10 +29,12 @@ function Detail(props) {
     };
   }, []);
 
-  const { id } = useParams();
-  const imgIndex = parseInt(id) + 1;
+  const { urlId } = useParams();
+  const imgIndex = parseInt(urlId) + 1;
+  const beforePageIndex = parseInt(urlId) - 1;
+  const nextPageIndex = imgIndex;
   const history = useHistory();
-  const 찾은상품 = props.shoes.find((obj) => obj.id == id);
+  const 찾은상품 = props.shoes.find((obj) => obj.id == urlId);
 
   function 재고관리() {
     if (재고[0] <= 0) {
@@ -44,9 +46,20 @@ function Detail(props) {
 
     props.dispatch({
       type: "항목추가",
-      데이터: { 상품명: "새로운상품", 가격: "새로운가격", 수량: 1 },
+      데이터: 주문데이터반환(),
     });
     history.push("/cart");
+  }
+
+  function 주문데이터반환() {
+    if (props.shoes)
+      return {
+        id: 찾은상품.id,
+        상품명: 찾은상품.title,
+        가격: 찾은상품.price,
+        사이즈: 사이즈,
+        수량: 1,
+      };
   }
 
   return (
@@ -68,31 +81,66 @@ function Detail(props) {
           />
         </div>
         <div className="col-md-6 mt-4">
-          <h4 className="pt-5">{찾은상품.title}</h4>
-          <p>{찾은상품.content}</p>
-          <p>{찾은상품.price}원</p>
-          <Info 재고={재고} />
+          <form className="detail__form border">
+            <h4 className="p-2">{찾은상품.title}</h4>
+            <p>{찾은상품.content}</p>
+            <p>{찾은상품.price}원</p>
 
-          <button
-            className="btn btn-danger"
-            onClick={() => {
-              history.goBack();
-            }}
-          >
-            뒤로가기
-          </button>
-          <button className="btn btn-danger" onClick={재고관리}>
-            주문하기
-          </button>
-          <button
-            className="btn btn-danger"
-            onClick={() => {
-              props.상세페이지번호변경(props.상세페이지번호 + 1);
-              history.push(`/detail/${props.상세페이지번호}`);
-            }}
-          >
-            다음상품
-          </button>
+            <Info 재고={재고} 찾은상품={찾은상품} />
+
+            <div>
+              <select
+                id="option1"
+                className="form__size"
+                defaultValue="사이즈선택"
+                onChange={(e) => {
+                  사이즈변경(e.target.value);
+                }}
+              >
+                <option value="사이즈선택" disabled hidden>
+                  사이즈선택
+                </option>
+                <option value="S" className="small">
+                  S
+                </option>
+                <option value="M" className="medium">
+                  M
+                </option>
+                <option value="L" className="large">
+                  L
+                </option>
+              </select>
+            </div>
+            <div className="form__buttons p-3">
+              <button
+                className="btn btn-danger"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (urlId <= 0) {
+                    return;
+                  }
+                  history.push(`/detail/${beforePageIndex}`);
+                }}
+              >
+                뒤로가기
+              </button>
+              <button className="btn btn-danger" onClick={재고관리}>
+                주문하기
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (urlId >= 5) {
+                    return;
+                  }
+                  history.push("/detail/" + nextPageIndex);
+                }}
+              >
+                다음상품
+              </button>
+            </div>
+          </form>
         </div>
       </div>
 
@@ -102,10 +150,10 @@ function Detail(props) {
             eventKey="link-0"
             onClick={() => {
               스위치변경(false);
-              누른탭변경(0);
+              누른탭변경("상품정보");
             }}
           >
-            Tab 0
+            상품정보
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
@@ -113,10 +161,10 @@ function Detail(props) {
             eventKey="link-1"
             onClick={() => {
               스위치변경(false);
-              누른탭변경(1);
+              누른탭변경("배송정보");
             }}
           >
-            Tab 1
+            배송정보
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
@@ -124,10 +172,10 @@ function Detail(props) {
             eventKey="link-2"
             onClick={() => {
               스위치변경(false);
-              누른탭변경(2);
+              누른탭변경("환불약관");
             }}
           >
-            Tab 2
+            환불약관
           </Nav.Link>
         </Nav.Item>
       </Nav>
@@ -143,19 +191,27 @@ function TabContents(props) {
     props.스위치변경(true);
   });
 
-  if (props.누른탭 === 0) {
-    return <div>0번째 탭입니다.</div>;
-  } else if (props.누른탭 === 1) {
-    return <div>1번째 탭입니다.</div>;
-  } else {
-    return <div>2번째 탭입니다.</div>;
-  }
+  const 탭UI = {
+    상품정보: "상품정보 탭입니다",
+    배송정보: "배송정보 탭입니다",
+    환불약관: "환불약관 탭입니다",
+  };
+
+  return (
+    <div>
+      <p>{탭UI[props.누른탭]}</p>
+    </div>
+  );
 }
 
 function Info(props) {
   const 재고 = useContext(재고context);
 
-  return <div>재고 : {재고[0]}</div>;
+  return (
+    <div>
+      <p> 재고 : {재고[props.찾은상품.id]}</p>
+    </div>
+  );
 }
 
 function Alert() {
@@ -163,7 +219,6 @@ function Alert() {
 }
 
 function props화시키기(state) {
-  console.log(state);
   return {
     상품들: state.reducer,
     alert창: state.reducer2,

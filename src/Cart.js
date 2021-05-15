@@ -12,8 +12,10 @@ function Cart(props) {
               <th>#</th>
               <th>상품명</th>
               <th>가격(원)</th>
+              <th>사이즈</th>
               <th>수량(개)</th>
               <th>변경</th>
+              <th>삭제</th>
             </tr>
           </thead>
           <tbody>
@@ -23,28 +25,60 @@ function Cart(props) {
                   <td>{상품.id}</td>
                   <td>{상품.상품명}</td>
                   <td>{상품.가격} </td>
+                  <td>{상품.사이즈} </td>
                   <td>{상품.수량} </td>
+
                   <td>
                     <button
+                      className="btn "
                       onClick={() => {
-                        props.dispatch({ type: "수량증가" });
+                        props.dispatch({
+                          type: "수량증가",
+                          데이터: { id: 상품.id, 사이즈: 상품.사이즈 },
+                        });
                       }}
                     >
                       +
                     </button>
                     <button
+                      className="btn "
                       onClick={() => {
-                        props.dispatch({ type: "수량감소" });
+                        props.dispatch({
+                          type: "수량감소",
+                          데이터: { id: 상품.id, 사이즈: 상품.사이즈 },
+                        });
                       }}
                     >
                       -
                     </button>
+                  </td>
+                  <td>
+                    <i
+                      className="fas fa-trash-alt"
+                      onClick={() =>
+                        props.dispatch({
+                          type: "삭제",
+                          데이터: { id: 상품.id },
+                        })
+                      }
+                    ></i>
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </Table>
+        <button
+          className="btn btn__sort"
+          onClick={() => {
+            props.dispatch({
+              type: "정렬",
+              데이터: props.상품들,
+            });
+          }}
+        >
+          정렬
+        </button>
         {props.alert창 === true ? (
           <div className="alert__text">
             <p>지금 구매하면 신규할인 20%</p>
