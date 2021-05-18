@@ -1,0 +1,108 @@
+@import "_reset.scss";
+
+$로고색상: skyblue;
+$글자색상: rgb(246, 135, 135);
+$배경색상: rgb(254, 250, 204);
+
+.main__background {
+  background: url("./img/background.jpg") bottom/cover no-repeat;
+  color: #ffffff;
+  border-radius: 0;
+}
+
+.Navbar__logo {
+  color: $로고색상;
+}
+.Navbar__logo:hover {
+  text-decoration: none;
+  color: $글자색상;
+}
+
+.container__title {
+  padding: 15px;
+}
+
+.alert__text {
+  p {
+    margin: 0;
+  }
+  background-color: $배경색상;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.axios__alert {
+  @extend .alert__text;
+  background-color: $글자색상;
+  border: 5px solid rgb(255, 202, 8);
+  width: 300px;
+  text-align: center;
+  margin: 30px;
+}
+
+.axios__container {
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  &-danger {
+    margin-top: 15px;
+    margin-right: 5px;
+  }
+  &__sort {
+    border: 1px solid #eee;
+    border-radius: 5px;
+    background-color: antiquewhite;
+  }
+  &__sort:active {
+    transform: translateY(1px);
+    transform: scale(0.98);
+  }
+}
+
+.icon__loading {
+  font-size: 100px;
+  margin: 40px;
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    color: rgb(255, 255, 255);
+  }
+  50% {
+    color: rgb(68, 245, 192);
+  }
+  to {
+    transform: rotate(360deg);
+    color: rgb(255, 255, 255);
+  }
+}
+
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: all 500ms;
+}
+
+.detail__form {
+  .form {
+    &__size {
+      width: 75%;
+    }
+  }
+}
+
+.cart {
+  &__container {
+    // background: url("./img/table.jpg") center/cover no-repeat;
+    height: 50vh;
+  }
+  &__table {
+    max-width: 1000px;
+    margin: auto;
+  }
+}
