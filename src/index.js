@@ -109,11 +109,15 @@ function reducer(state = 초기값, 액션) {
 let store = createStore(combineReducers({ reducer, reducer2 }));
 
 ReactDOM.render(
-  <BrowserRouter>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </BrowserRouter>,
+  <React.StrictMode>
+    <BrowserRouter>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </BrowserRouter>
+    ,
+  </React.StrictMode>,
+
   document.getElementById("root")
 );
 

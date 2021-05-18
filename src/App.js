@@ -2,14 +2,23 @@
 
 import "./App.css";
 import { Navbar, Nav, NavDropdown, Button, Jumbotron } from "react-bootstrap";
-import React, { useState, useContext, useEffect } from "react";
+import React, {
+  useState,
+  useContext,
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+} from "react";
 import Data from "./data.js";
 import { Link, Route, Switch, useHistory } from "react-router-dom";
-import Detail from "./Detail.js";
 import "./Detail.scss";
 import axios from "axios";
 import Cart from "./Cart.js";
 
+let Detail = lazy(() => {
+  return import("./Detail.js");
+});
 export let 재고context = React.createContext();
 
 function App() {
@@ -20,7 +29,6 @@ function App() {
   const [재고, 재고변경] = useState([10, 17, 2, 5, 9, 1]);
 
   function 데이터받아오기() {
-    console.log("hi");
     axios
       .get("https://codingapple1.github.io/shop/data2.json")
       .then((result) => {
@@ -62,8 +70,7 @@ function App() {
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
-      </Navbar>
-
+      </Navbar>{" "}
       {/* main */}
       <Switch>
         <Route exact path="/">
@@ -130,12 +137,14 @@ function App() {
 
         <Route path="/detail/:urlId">
           <재고context.Provider value={재고}>
-            <Detail
-              shoes={shoes}
-              shoes변경={shoes변경}
-              버튼숨김변경={버튼숨김변경}
-              재고변경={재고변경}
-            />
+            <Suspense fallback={<div>로딩중입니다.</div>}>
+              <Detail
+                shoes={shoes}
+                shoes변경={shoes변경}
+                버튼숨김변경={버튼숨김변경}
+                재고변경={재고변경}
+              />
+            </Suspense>
           </재고context.Provider>
         </Route>
 
@@ -147,24 +156,9 @@ function App() {
   );
 }
 
-function 로딩창() {
-  return (
-    <div>
-      <i className="fas fa-spinner icon__loading"></i>
-    </div>
-  );
-}
-
-function 요청실패창() {
-  return (
-    <div className="axios__container">
-      <div className="axios__alert">요청에 실패했습니다.</div>
-    </div>
-  );
-}
-
 function 신발카드(props) {
   let history = useHistory();
+
   return (
     <div
       className="col-md-4"
@@ -181,6 +175,22 @@ function 신발카드(props) {
       />
       <h4>{props.title}</h4>
       <p>{props.content}</p>
+    </div>
+  );
+}
+
+function 로딩창() {
+  return (
+    <div>
+      <i className="fas fa-spinner icon__loading"></i>
+    </div>
+  );
+}
+
+function 요청실패창() {
+  return (
+    <div className="axios__container">
+      <div className="axios__alert">요청에 실패했습니다.</div>
     </div>
   );
 }

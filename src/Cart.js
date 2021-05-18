@@ -1,8 +1,8 @@
-import React from "react";
+import React, { memo } from "react";
 import { Table } from "react-bootstrap";
 import { connect } from "react-redux";
 
-function Cart(props) {
+let Cart = memo(function (props) {
   return (
     <main className="cart__container">
       <div className="cart__table">
@@ -94,7 +94,8 @@ function Cart(props) {
       </div>
     </main>
   );
-}
+});
+
 function props화시키기(state) {
   return {
     상품들: state.reducer,

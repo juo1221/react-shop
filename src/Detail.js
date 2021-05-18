@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { 재고context } from "./App.js";
 import { CSSTransition } from "react-transition-group";
 import { connect } from "react-redux";
+let 최근본상품id;
 
 function Detail(props) {
   const [경고창, 경고창변경] = useState(true);
@@ -15,26 +16,26 @@ function Detail(props) {
   const [스위치, 스위치변경] = useState(false);
   const [사이즈, 사이즈변경] = useState("S");
 
-  useEffect(() => {
-    const 타이머 = setTimeout(() => {
-      경고창변경(false);
-    }, 2000);
-    return () => {
-      clearTimeout(타이머);
-      props.버튼숨김변경(false);
-
-      const newShoesArr = [...props.shoes];
-      const filtered = newShoesArr.splice(0, 3);
-      props.shoes변경(filtered);
-    };
-  }, []);
-
   const { urlId } = useParams();
   const imgIndex = parseInt(urlId) + 1;
   const beforePageIndex = parseInt(urlId) - 1;
   const nextPageIndex = imgIndex;
   const history = useHistory();
   const 찾은상품 = props.shoes.find((obj) => obj.id == urlId);
+
+  useEffect(() => {
+    const 타이머 = setTimeout(() => {
+      경고창변경(false);
+    }, 2000);
+
+    return () => {
+      clearTimeout(타이머);
+      props.버튼숨김변경(false);
+      const newShoesArr = [...props.shoes];
+      const filtered = newShoesArr.splice(0, 3);
+      props.shoes변경(filtered);
+    };
+  }, []);
 
   function 재고관리() {
     if (재고[0] <= 0) {
@@ -65,6 +66,7 @@ function Detail(props) {
   return (
     <div className="container">
       <h2 className="container__title">Detail</h2>
+      {props.상품들}
 
       {
         //
@@ -81,7 +83,7 @@ function Detail(props) {
           />
         </div>
         <div className="col-md-6 mt-4">
-          <form className="detail__form border">
+          <div className="detail__form border">
             <h4 className="p-2">{찾은상품.title}</h4>
             <p>{찾은상품.content}</p>
             <p>{찾은상품.price}원</p>
@@ -140,7 +142,7 @@ function Detail(props) {
                 다음상품
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
 
@@ -180,7 +182,12 @@ function Detail(props) {
         </Nav.Item>
       </Nav>
       <CSSTransition in={스위치} timeout={500} classNames="fade">
-        <TabContents 누른탭={누른탭} 스위치변경={스위치변경} />
+        <TabContents
+          누른탭={누른탭}
+          스위치변경={스위치변경}
+          최근본상품id={최근본상품id}
+          신발들={props.shoes}
+        />
       </CSSTransition>
     </div>
   );
@@ -197,11 +204,7 @@ function TabContents(props) {
     환불약관: "환불약관 탭입니다",
   };
 
-  return (
-    <div>
-      <p>{탭UI[props.누른탭]}</p>
-    </div>
-  );
+  return <div>{탭UI[props.누른탭]}</div>;
 }
 
 function Info(props) {
