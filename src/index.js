@@ -65,7 +65,7 @@ function 삭제(state, 액션) {
 
 // let arr = ["l", "s", "m"];
 // arr.sort((next, prev) => (next > prev ? -1 : 0));
-// console.log(arr);
+//
 
 function 정렬(state) {
   let copy = [...state];
@@ -78,7 +78,7 @@ function 정렬(state) {
       return 0;
     }
   });
-  console.log(copy);
+
   return copy;
 }
 
@@ -109,14 +109,13 @@ function reducer(state = 초기값, 액션) {
 let store = createStore(combineReducers({ reducer, reducer2 }));
 
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </BrowserRouter>
-    ,
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <BrowserRouter>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </BrowserRouter>,
+  // </React.StrictMode>,
 
   document.getElementById("root")
 );

@@ -15,6 +15,7 @@ import { Link, Route, Switch, useHistory } from "react-router-dom";
 import "./Detail.scss";
 import axios from "axios";
 import Cart from "./Cart.js";
+import LocalProducts from "./LocalProducts.js";
 
 let Detail = lazy(() => {
   return import("./Detail.js");
@@ -36,6 +37,20 @@ function App() {
       });
   }
 
+  function 버튼숨김값변경하기() {
+    버튼숨김변경(true);
+    데이터받아오기();
+  }
+
+  useEffect(() => {
+    if (버튼숨김 === true) {
+      return;
+    }
+    const newShoesArr = [...shoes];
+    const filtered = newShoesArr.splice(0, 3);
+    shoes변경(filtered);
+  }, [버튼숨김]);
+
   return (
     <div className="App">
       <Navbar bg="light" expand="lg">
@@ -48,26 +63,17 @@ function App() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto ">
             <Nav.Link as={Link} to="/">
-              Home
-            </Nav.Link>
-            <Nav.Link as={Link} to="/cart">
-              Cart
+              홈
             </Nav.Link>
             <Nav.Link as={Link} to="/detail/0" onClick={데이터받아오기}>
-              Detail
+              상세 페이지
             </Nav.Link>
-
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown>
+            <Nav.Link as={Link} to="/cart">
+              장바구니
+            </Nav.Link>
+            <Nav.Link as={Link} to="/최근본상품" onClick={버튼숨김값변경하기}>
+              최근 본 상품
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>{" "}
@@ -107,6 +113,7 @@ function App() {
               className="btn btn-primary"
               onClick={() => {
                 로딩변경(true);
+
                 axios
                   .get("https://codingapple1.github.io/shop/data2.json")
                   .then((result) => {
@@ -115,7 +122,7 @@ function App() {
                       요청결과변경(true);
                       버튼숨김변경(true);
                       로딩변경(false);
-                    }, 1000);
+                    }, 500);
                   })
                   .catch(() => {
                     로딩변경(false);
@@ -139,6 +146,7 @@ function App() {
           <재고context.Provider value={재고}>
             <Suspense fallback={<div>로딩중입니다.</div>}>
               <Detail
+                데이터받아오기={데이터받아오기}
                 shoes={shoes}
                 shoes변경={shoes변경}
                 버튼숨김변경={버튼숨김변경}
@@ -149,7 +157,16 @@ function App() {
         </Route>
 
         <Route path="/cart">
-          <Cart />
+          <Cart 버튼숨김변경={버튼숨김변경} />
+        </Route>
+        <Route path="/최근본상품">
+          <LocalProducts
+            데이터받아오기={데이터받아오기}
+            shoes={shoes}
+            shoes변경={shoes변경}
+            버튼숨김={버튼숨김}
+            버튼숨김변경={버튼숨김변경}
+          />
         </Route>
       </Switch>
     </div>
@@ -161,7 +178,7 @@ function 신발카드(props) {
 
   return (
     <div
-      className="col-md-4"
+      className="col-lg-4"
       onClick={() => {
         props.데이터받아오기();
         history.push("/detail/" + props.id);
@@ -189,7 +206,7 @@ function 로딩창() {
 
 function 요청실패창() {
   return (
-    <div className="axios__container">
+    <div className="axios-container">
       <div className="axios__alert">요청에 실패했습니다.</div>
     </div>
   );

@@ -7,16 +7,12 @@ let subTitle = styled.div`
   color: white;
 `;
 
-function 최근본상품들(props) {
+function LocalProducts(props) {
   useEffect(() => {
-    props.데이터받아오기();
-
     return () => {
-      const newShoesArr = [...props.shoes];
-      const filtered = newShoesArr.splice(0, 3);
-      props.shoes변경(filtered);
+      props.버튼숨김변경(false);
     };
-  });
+  }, []);
 
   let 불러온상품들 = JSON.parse(localStorage.getItem("최근본상품"));
 
@@ -61,6 +57,7 @@ function RecentProducts(props) {
                   className="btn"
                   variant="danger"
                   onClick={() => {
+                    console.log(최근본상품);
                     history.push("/detail/" + 최근본상품.id);
                   }}
                 >
@@ -75,4 +72,4 @@ function RecentProducts(props) {
   );
 }
 
-export default 최근본상품들;
+export default LocalProducts;

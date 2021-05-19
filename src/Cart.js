@@ -1,11 +1,13 @@
 import React, { memo } from "react";
 import { Table } from "react-bootstrap";
 import { connect } from "react-redux";
+import { isStyledComponent } from "styled-components";
 
 let Cart = memo(function (props) {
   return (
-    <main className="cart__container">
-      <div className="cart__table">
+    <main className="장바구니">
+      <h2 className="장바구니-title">장바구니</h2>
+      <div className="장바구니__table">
         <Table responsive hover>
           <thead>
             <tr>

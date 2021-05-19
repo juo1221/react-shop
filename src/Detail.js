@@ -1,15 +1,15 @@
 /*eslint-disable*/
 
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, memo } from "react";
 import { Nav } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { 재고context } from "./App.js";
 import { CSSTransition } from "react-transition-group";
 import { connect } from "react-redux";
-let 최근본상품id;
 
 function Detail(props) {
+  console.log(props.shoes);
   const [경고창, 경고창변경] = useState(true);
   const 재고 = useContext(재고context);
   const [누른탭, 누른탭변경] = useState("상품정보");
@@ -24,6 +24,28 @@ function Detail(props) {
   const 찾은상품 = props.shoes.find((obj) => obj.id == urlId);
 
   useEffect(() => {
+    let 최근본상품들 = JSON.parse(localStorage.getItem("최근본상품"));
+    최근본상품들 =
+      최근본상품들 === null
+        ? []
+        : JSON.parse(localStorage.getItem("최근본상품"));
+
+    const 상품obj = {
+      id: urlId,
+      title: props.shoes[urlId].title,
+      content: props.shoes[urlId].content,
+      price: props.shoes[urlId].price,
+    };
+
+    const 상품추가확인하기 = 최근본상품들.some((obj) => {
+      return obj.id == urlId;
+    });
+
+    if (!상품추가확인하기) {
+      최근본상품들.push(상품obj);
+      localStorage.setItem("최근본상품", JSON.stringify(최근본상품들));
+    }
+
     const 타이머 = setTimeout(() => {
       경고창변경(false);
     }, 2000);
@@ -64,56 +86,57 @@ function Detail(props) {
   }
 
   return (
-    <div className="container">
-      <h2 className="container__title">Detail</h2>
-      {props.상품들}
+    <div className="상세페이지">
+      <h2 className="상세페이지-title">상세 페이지</h2>
 
       {
         //
         경고창 === true ? <Alert /> : null
       }
+      <main className="상세페이지-container">
+        <div className="row ">
+          <div className="col-md-6">
+            <img
+              src={
+                "https://codingapple1.github.io/shop/shoes" + imgIndex + ".jpg"
+              }
+              width="100%"
+            />
+          </div>
 
-      <div className="row">
-        <div className="col-md-6">
-          <img
-            src={
-              "https://codingapple1.github.io/shop/shoes" + imgIndex + ".jpg"
-            }
-            width="100%"
-          />
-        </div>
-        <div className="col-md-6 mt-4">
-          <div className="detail__form border">
-            <h4 className="p-2">{찾은상품.title}</h4>
-            <p>{찾은상품.content}</p>
-            <p>{찾은상품.price}원</p>
+          <div className="col-md-6 border 상세페이지-form">
+            <div className="상세페이지-contents ">
+              <h4 className="p-2">{찾은상품.title}</h4>
+              <p>{찾은상품.content}</p>
+              <p>{찾은상품.price}원</p>
 
-            <Info 재고={재고} 찾은상품={찾은상품} />
+              <Info 재고={재고} 찾은상품={찾은상품} />
 
-            <div>
-              <select
-                id="option1"
-                className="form__size"
-                defaultValue="사이즈선택"
-                onChange={(e) => {
-                  사이즈변경(e.target.value);
-                }}
-              >
-                <option value="사이즈선택" disabled hidden>
-                  사이즈선택
-                </option>
-                <option value="S" className="small">
-                  S
-                </option>
-                <option value="M" className="medium">
-                  M
-                </option>
-                <option value="L" className="large">
-                  L
-                </option>
-              </select>
+              <div>
+                <select
+                  id="option1"
+                  className="상세페이지-form__size"
+                  defaultValue="사이즈선택"
+                  onChange={(e) => {
+                    사이즈변경(e.target.value);
+                  }}
+                >
+                  <option value="사이즈선택" disabled hidden>
+                    사이즈선택
+                  </option>
+                  <option value="S" className="small">
+                    S
+                  </option>
+                  <option value="M" className="medium">
+                    M
+                  </option>
+                  <option value="L" className="large">
+                    L
+                  </option>
+                </select>
+              </div>
             </div>
-            <div className="form__buttons p-3">
+            <div className="상세페이지-form__buttons p-3">
               <button
                 className="btn btn-danger"
                 onClick={(e) => {
@@ -144,9 +167,8 @@ function Detail(props) {
             </div>
           </div>
         </div>
-      </div>
-
-      <Nav variant="tabs" defaultActiveKey="link-0">
+      </main>
+      <Nav variant="tabs" defaultActiveKey="link-0" className="상세페이지-tab">
         <Nav.Item>
           <Nav.Link
             eventKey="link-0"
@@ -185,7 +207,6 @@ function Detail(props) {
         <TabContents
           누른탭={누른탭}
           스위치변경={스위치변경}
-          최근본상품id={최근본상품id}
           신발들={props.shoes}
         />
       </CSSTransition>
