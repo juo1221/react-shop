@@ -1,19 +1,8 @@
 import { Card, Button } from "react-bootstrap";
-import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 
-let subTitle = styled.div`
-  color: white;
-`;
-
 function LocalProducts(props) {
-  useEffect(() => {
-    return () => {
-      props.버튼숨김변경(false);
-    };
-  }, []);
-
   let 불러온상품들 = JSON.parse(localStorage.getItem("최근본상품"));
 
   return (
@@ -32,7 +21,11 @@ function RecentProducts(props) {
   let history = useHistory();
 
   if (props.불러온상품들 === null) {
-    return <subTitle>조회한 상품이 없습니다.</subTitle>;
+    return (
+      <div className="최근본상품-subtitle">
+        <p>조회한 상품이 없습니다.</p>
+      </div>
+    );
   }
 
   return (
@@ -57,7 +50,6 @@ function RecentProducts(props) {
                   className="btn"
                   variant="danger"
                   onClick={() => {
-                    console.log(최근본상품);
                     history.push("/detail/" + 최근본상품.id);
                   }}
                 >

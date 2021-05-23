@@ -147,4 +147,9 @@ $배경색상: rgb(254, 250, 204);
   &-title {
     @extend .상세페이지-title;
   }
+  &-subtitle {
+    width: 100%;
+    margin-top: 100px;
+    font-size: 30px;
+  }
 }

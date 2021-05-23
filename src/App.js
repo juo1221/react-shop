@@ -11,7 +11,7 @@ import React, {
   useRef,
 } from "react";
 import Data from "./data.js";
-import { Link, Route, Switch, useHistory } from "react-router-dom";
+import { Link, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import "./Detail.scss";
 import axios from "axios";
 import Cart from "./Cart.js";
@@ -28,28 +28,31 @@ function App() {
   const [버튼숨김, 버튼숨김변경] = useState(false);
   const [로딩, 로딩변경] = useState(false);
   const [재고, 재고변경] = useState([10, 17, 2, 5, 9, 1]);
+  const location = useLocation({ pathname: "/App" });
 
-  function 데이터받아오기() {
+  function 데이터자르기() {
+    const newShoesArr = [...shoes];
+    const filtered = newShoesArr.splice(0, 3);
+    shoes변경(filtered);
+  }
+
+  function 데이터불러오기() {
     axios
       .get("https://codingapple1.github.io/shop/data2.json")
       .then((result) => {
         shoes변경([...shoes, ...result.data]);
       });
   }
-
-  function 버튼숨김값변경하기() {
-    버튼숨김변경(true);
-    데이터받아오기();
-  }
-
   useEffect(() => {
-    if (버튼숨김 === true) {
-      return;
+    if (location.pathname === "/") {
+      if (버튼숨김 === true) {
+        버튼숨김변경(false);
+      }
+      데이터자르기();
+    } else if (location.pathname === "/최근본상품") {
+      데이터불러오기();
     }
-    const newShoesArr = [...shoes];
-    const filtered = newShoesArr.splice(0, 3);
-    shoes변경(filtered);
-  }, [버튼숨김]);
+  }, [location]);
 
   return (
     <div className="App">
@@ -65,13 +68,13 @@ function App() {
             <Nav.Link as={Link} to="/">
               홈
             </Nav.Link>
-            <Nav.Link as={Link} to="/detail/0" onClick={데이터받아오기}>
+            <Nav.Link as={Link} to="/detail/0">
               상세 페이지
             </Nav.Link>
             <Nav.Link as={Link} to="/cart">
               장바구니
             </Nav.Link>
-            <Nav.Link as={Link} to="/최근본상품" onClick={버튼숨김값변경하기}>
+            <Nav.Link as={Link} to="/최근본상품">
               최근 본 상품
             </Nav.Link>
           </Nav>
@@ -100,7 +103,6 @@ function App() {
                     title={신발.title}
                     content={신발.content}
                     i={index}
-                    데이터받아오기={데이터받아오기}
                   />
                 );
               })}
@@ -146,9 +148,9 @@ function App() {
           <재고context.Provider value={재고}>
             <Suspense fallback={<div>로딩중입니다.</div>}>
               <Detail
-                데이터받아오기={데이터받아오기}
+                데이터자르기={데이터자르기}
+                데이터불러오기={데이터불러오기}
                 shoes={shoes}
-                shoes변경={shoes변경}
                 버튼숨김변경={버튼숨김변경}
                 재고변경={재고변경}
               />
@@ -161,9 +163,7 @@ function App() {
         </Route>
         <Route path="/최근본상품">
           <LocalProducts
-            데이터받아오기={데이터받아오기}
             shoes={shoes}
-            shoes변경={shoes변경}
             버튼숨김={버튼숨김}
             버튼숨김변경={버튼숨김변경}
           />
@@ -180,7 +180,6 @@ function 신발카드(props) {
     <div
       className="col-lg-4"
       onClick={() => {
-        props.데이터받아오기();
         history.push("/detail/" + props.id);
       }}
     >
@@ -207,7 +206,7 @@ function 로딩창() {
 function 요청실패창() {
   return (
     <div className="axios-container">
-      <div className="axios__alert">요청에 실패했습니다.</div>
+      <div className="axios__alert">데이터 요청에 실패했습니다.</div>
     </div>
   );
 }

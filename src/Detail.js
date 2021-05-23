@@ -3,13 +3,11 @@
 import React, { useEffect, useState, useContext, memo } from "react";
 import { Nav } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
-import styled from "styled-components";
 import { 재고context } from "./App.js";
 import { CSSTransition } from "react-transition-group";
 import { connect } from "react-redux";
 
 function Detail(props) {
-  console.log(props.shoes);
   const [경고창, 경고창변경] = useState(true);
   const 재고 = useContext(재고context);
   const [누른탭, 누른탭변경] = useState("상품정보");
@@ -17,13 +15,16 @@ function Detail(props) {
   const [사이즈, 사이즈변경] = useState("S");
 
   const { urlId } = useParams();
+
   const imgIndex = parseInt(urlId) + 1;
   const beforePageIndex = parseInt(urlId) - 1;
   const nextPageIndex = imgIndex;
   const history = useHistory();
-  const 찾은상품 = props.shoes.find((obj) => obj.id == urlId);
+  const 찾은상품 = props.shoes.find((obj) => {
+    return obj.id == urlId;
+  });
 
-  useEffect(() => {
+  function localStorage사용하기() {
     let 최근본상품들 = JSON.parse(localStorage.getItem("최근본상품"));
     최근본상품들 =
       최근본상품들 === null
@@ -45,17 +46,21 @@ function Detail(props) {
       최근본상품들.push(상품obj);
       localStorage.setItem("최근본상품", JSON.stringify(최근본상품들));
     }
+  }
+
+  useEffect(() => {
+    props.데이터불러오기();
+  }, []);
+
+  useEffect(() => {
+    localStorage사용하기();
 
     const 타이머 = setTimeout(() => {
       경고창변경(false);
     }, 2000);
 
     return () => {
-      clearTimeout(타이머);
-      props.버튼숨김변경(false);
-      const newShoesArr = [...props.shoes];
-      const filtered = newShoesArr.splice(0, 3);
-      props.shoes변경(filtered);
+      clearInterval(타이머);
     };
   }, []);
 

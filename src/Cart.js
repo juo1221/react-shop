@@ -1,7 +1,6 @@
 import React, { memo } from "react";
 import { Table } from "react-bootstrap";
 import { connect } from "react-redux";
-import { isStyledComponent } from "styled-components";
 
 let Cart = memo(function (props) {
   return (
