@@ -15,6 +15,7 @@ import { Link, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import "./Detail.scss";
 import axios from "axios";
 import Cart from "./Cart.js";
+import Location from "./Location.js";
 import LocalProducts from "./LocalProducts.js";
 
 let Detail = lazy(() => {
@@ -77,9 +78,12 @@ function App() {
             <Nav.Link as={Link} to="/최근본상품">
               최근 본 상품
             </Nav.Link>
+            <Nav.Link as={Link} to="/location">
+              위치
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
-      </Navbar>{" "}
+      </Navbar>
       {/* main */}
       <Switch>
         <Route exact path="/">
@@ -167,6 +171,9 @@ function App() {
             버튼숨김={버튼숨김}
             버튼숨김변경={버튼숨김변경}
           />
+        </Route>
+        <Route path="/location">
+          <Location />
         </Route>
       </Switch>
     </div>
