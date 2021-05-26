@@ -3,6 +3,8 @@
 $로고색상: skyblue;
 $글자색상: rgb(246, 135, 135);
 $배경색상: rgb(254, 250, 204);
+body {
+}
 
 .main__background {
   background: url("./img/background.jpg") bottom/cover no-repeat;
@@ -96,6 +98,8 @@ $배경색상: rgb(254, 250, 204);
   }
 
   &-contents {
+    border-top: 5px solid rgb(77, 75, 75);
+    background-color: rgb(255, 248, 232);
     &__size {
       width: 75%;
     }
@@ -114,6 +118,7 @@ $배경색상: rgb(254, 250, 204);
 
   &-form {
     &__buttons {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -124,6 +129,11 @@ $배경색상: rgb(254, 250, 204);
         margin-left: 5px;
         font-size: 15px;
       }
+    }
+    &__soldout {
+      margin-top: 15px;
+      height: 30px;
+      width: 100%;
     }
   }
 }

@@ -1,6 +1,6 @@
 /*eslint-disable*/
 
-import React, { useEffect, useState, useContext, memo } from "react";
+import React, { useEffect, useState, useContext, memo, useMemo } from "react";
 import { Nav } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import { 재고context } from "./App.js";
@@ -15,7 +15,6 @@ function Detail(props) {
   const [사이즈, 사이즈변경] = useState("S");
 
   const { urlId } = useParams();
-
   const imgIndex = parseInt(urlId) + 1;
   const beforePageIndex = parseInt(urlId) - 1;
   const nextPageIndex = imgIndex;
@@ -24,7 +23,7 @@ function Detail(props) {
     return obj.id == urlId;
   });
 
-  function localStorage사용하기() {
+  function memorizeProducts() {
     let 최근본상품들 = JSON.parse(localStorage.getItem("최근본상품"));
     최근본상품들 =
       최근본상품들 === null
@@ -53,7 +52,7 @@ function Detail(props) {
   }, []);
 
   useEffect(() => {
-    localStorage사용하기();
+    memorizeProducts();
 
     const 타이머 = setTimeout(() => {
       경고창변경(false);
@@ -64,19 +63,26 @@ function Detail(props) {
     };
   }, []);
 
+  // 문제해결 요망
   function 재고관리() {
-    if (재고[0] <= 0) {
+    if (재고[찾은상품.id] === 1) {
+      props.재고품절변경(true);
+    } else if (재고[찾은상품.id] === 0) {
       return;
     }
-    const newArr = [...재고];
-    newArr[0] = newArr[0] - 1;
-    props.재고변경(newArr);
-
+    재고감소();
     props.dispatch({
       type: "항목추가",
       데이터: 주문데이터반환(),
     });
+
     history.push("/cart");
+  }
+
+  function 재고감소() {
+    const 재고copy = [...재고];
+    재고copy[찾은상품.id]--;
+    props.재고변경(재고copy);
   }
 
   function 주문데이터반환() {
@@ -110,11 +116,10 @@ function Detail(props) {
           </div>
 
           <div className="col-md-6 border 상세페이지-form">
-            <div className="상세페이지-contents ">
+            <div className="상세페이지-contents pb-5">
               <h4 className="p-2">{찾은상품.title}</h4>
               <p>{찾은상품.content}</p>
               <p>{찾은상품.price}원</p>
-
               <Info 재고={재고} 찾은상품={찾은상품} />
 
               <div>
@@ -141,6 +146,14 @@ function Detail(props) {
                 </select>
               </div>
             </div>
+            <div className="상세페이지-form__soldout">
+              {props.재고품절 === true && 재고[찾은상품.id] === 0 ? (
+                <재고품절Card
+                  재고품절={props.재고품절}
+                  재고품절변경={props.재고품절변경}
+                />
+              ) : null}
+            </div>
             <div className="상세페이지-form__buttons p-3">
               <button
                 className="btn btn-danger"
@@ -154,9 +167,11 @@ function Detail(props) {
               >
                 뒤로가기
               </button>
+
               <button className="btn btn-danger" onClick={재고관리}>
                 주문하기
               </button>
+
               <button
                 className="btn btn-danger"
                 onClick={(e) => {
@@ -236,11 +251,7 @@ function TabContents(props) {
 function Info(props) {
   const 재고 = useContext(재고context);
 
-  return (
-    <div>
-      <p> 재고 : {재고[props.찾은상품.id]}</p>
-    </div>
-  );
+  return <p> 재고 : {재고[props.찾은상품.id]}</p>;
 }
 
 function Alert() {
@@ -252,6 +263,14 @@ function props화시키기(state) {
     상품들: state.reducer,
     alert창: state.reducer2,
   };
+}
+
+function 재고품절Card(props) {
+  useEffect(() => {
+    console.log(props.재고품절);
+    console.log("hi");
+  }, [props.재고품절]);
+  return <p className="mb-0">해당상품은 품절되었습니다.</p>;
 }
 
 export default connect(props화시키기)(Detail);

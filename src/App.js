@@ -27,6 +27,8 @@ function App() {
   const [shoes, shoes변경] = useState(Data);
   const [요청결과, 요청결과변경] = useState(true);
   const [버튼숨김, 버튼숨김변경] = useState(false);
+  const [재고품절, 재고품절변경] = useState(false);
+
   const [로딩, 로딩변경] = useState(false);
   const [재고, 재고변경] = useState([10, 17, 2, 5, 9, 1]);
   const location = useLocation({ pathname: "/App" });
@@ -41,7 +43,12 @@ function App() {
     axios
       .get("https://codingapple1.github.io/shop/data2.json")
       .then((result) => {
-        shoes변경([...shoes, ...result.data]);
+        const resultData = result.data.map((obj) => {
+          obj.price = obj.price.toLocaleString();
+          return obj;
+        });
+
+        shoes변경([...shoes, ...resultData]);
       });
   }
   useEffect(() => {
@@ -88,14 +95,10 @@ function App() {
       <Switch>
         <Route exact path="/">
           <Jumbotron className="main__background ">
-            <h1>20% Season OFF</h1>
-            <p>
-              This is a simple hero unit, a simple jumbotron-style component for
-              calling extra attention to featured content or information.
-            </p>
-            <p>
-              <Button variant="primary">Learn more</Button>
-            </p>
+            <h1 style={{ fontSize: "100px" }}>신발팝니다.</h1>
+            <h2>나이키</h2>
+            <h2>아디다스</h2>
+            <h2>다팔아여</h2>
           </Jumbotron>
           <div className="container">
             <div className="row">
@@ -123,8 +126,13 @@ function App() {
                 axios
                   .get("https://codingapple1.github.io/shop/data2.json")
                   .then((result) => {
+                    const resultData = result.data.map((obj) => {
+                      obj.price = obj.price.toLocaleString();
+                      return obj;
+                    });
+                    console.log(resultData);
                     setTimeout(() => {
-                      shoes변경([...shoes, ...result.data]);
+                      shoes변경([...shoes, ...resultData]);
                       요청결과변경(true);
                       버튼숨김변경(true);
                       로딩변경(false);
@@ -157,6 +165,8 @@ function App() {
                 shoes={shoes}
                 버튼숨김변경={버튼숨김변경}
                 재고변경={재고변경}
+                재고품절={재고품절}
+                재고품절변경={재고품절변경}
               />
             </Suspense>
           </재고context.Provider>
