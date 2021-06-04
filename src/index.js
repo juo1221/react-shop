@@ -28,17 +28,24 @@ function 항목추가(state, 액션) {
   if (찾은항목 === undefined) {
     copy.push(액션.데이터);
   } else {
-    찾은항목.주문수량++;
+    // 찾은항목.주문수량++;
   }
   return copy;
 }
 function 수량증가(state, 액션) {
+  const 남은재고 = 액션.데이터.남은재고.find(
+    (재고, index) => 액션.데이터.id === index
+  );
+
   const copy = [...state];
 
   const 찾은항목 = copy.find((obj) => {
     return obj.id === 액션.데이터.id && obj.사이즈 === 액션.데이터.사이즈;
   });
 
+  if (찾은항목.주문수량 >= 남은재고) {
+    return copy;
+  }
   찾은항목.주문수량++;
   return copy;
 }
