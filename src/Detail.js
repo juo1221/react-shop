@@ -47,30 +47,13 @@ function Detail(props) {
     }
   }
 
-  useEffect(() => {
-    props.데이터불러오기();
-  }, []);
-
-  useEffect(() => {
-    memorizeProducts();
-
-    const 타이머 = setTimeout(() => {
-      경고창변경(false);
-    }, 2000);
-
-    return () => {
-      clearInterval(타이머);
-    };
-  }, []);
-
-  // 문제해결 요망
   function 재고관리() {
     if (재고[찾은상품.id] === 1) {
       props.재고품절변경(true);
     } else if (재고[찾은상품.id] === 0) {
       return;
     }
-    재고감소();
+    // 재고감소();
     props.dispatch({
       type: "항목추가",
       데이터: 주문데이터반환(),
@@ -92,9 +75,23 @@ function Detail(props) {
         상품명: 찾은상품.title,
         가격: 찾은상품.price,
         사이즈: 사이즈,
-        수량: 1,
+        주문수량: 1,
       };
   }
+
+  useEffect(() => {
+    props.데이터불러오기();
+  }, []);
+
+  useEffect(() => {
+    memorizeProducts();
+    const 타이머 = setTimeout(() => {
+      경고창변경(false);
+    }, 2000);
+    return () => {
+      clearInterval(타이머);
+    };
+  }, []);
 
   return (
     <div className="상세페이지">
@@ -148,10 +145,7 @@ function Detail(props) {
             </div>
             <div className="상세페이지-form__soldout">
               {props.재고품절 === true && 재고[찾은상품.id] === 0 ? (
-                <재고품절Card
-                  재고품절={props.재고품절}
-                  재고품절변경={props.재고품절변경}
-                />
+                <재고품절Card />
               ) : null}
             </div>
             <div className="상세페이지-form__buttons p-3">
@@ -266,10 +260,6 @@ function props화시키기(state) {
 }
 
 function 재고품절Card(props) {
-  useEffect(() => {
-    console.log(props.재고품절);
-    console.log("hi");
-  }, [props.재고품절]);
   return <p className="mb-0">해당상품은 품절되었습니다.</p>;
 }
 
