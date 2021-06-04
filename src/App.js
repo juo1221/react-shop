@@ -1,7 +1,7 @@
 /*eslint-disable*/
 
 import "./App.css";
-import { Navbar, Nav, NavDropdown, Button, Jumbotron } from "react-bootstrap";
+import { Navbar, Nav, Jumbotron } from "react-bootstrap";
 import React, {
   useState,
   useContext,
@@ -28,7 +28,6 @@ function App() {
   const [요청결과, 요청결과변경] = useState(true);
   const [버튼숨김, 버튼숨김변경] = useState(false);
   const [재고품절, 재고품절변경] = useState(false);
-
   const [로딩, 로딩변경] = useState(false);
   const [재고, 재고변경] = useState([10, 17, 2, 5, 9, 1]);
   const location = useLocation({ pathname: "/App" });
@@ -160,7 +159,6 @@ function App() {
           <재고context.Provider value={재고}>
             <Suspense fallback={<div>로딩중입니다.</div>}>
               <Detail
-                데이터자르기={데이터자르기}
                 데이터불러오기={데이터불러오기}
                 shoes={shoes}
                 버튼숨김변경={버튼숨김변경}
@@ -173,7 +171,7 @@ function App() {
         </Route>
 
         <Route path="/cart">
-          <Cart 버튼숨김변경={버튼숨김변경} />
+          <Cart 버튼숨김변경={버튼숨김변경} 재고={재고} />
         </Route>
         <Route path="/최근본상품">
           <LocalProducts
