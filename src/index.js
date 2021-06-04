@@ -28,7 +28,7 @@ function 항목추가(state, 액션) {
   if (찾은항목 === undefined) {
     copy.push(액션.데이터);
   } else {
-    찾은항목.수량++;
+    찾은항목.주문수량++;
   }
   return copy;
 }
@@ -38,7 +38,8 @@ function 수량증가(state, 액션) {
   const 찾은항목 = copy.find((obj) => {
     return obj.id === 액션.데이터.id && obj.사이즈 === 액션.데이터.사이즈;
   });
-  찾은항목.수량++;
+
+  찾은항목.주문수량++;
   return copy;
 }
 
@@ -48,11 +49,11 @@ function 수량감소(state, 액션) {
     return obj.id === 액션.데이터.id && obj.사이즈 === 액션.데이터.사이즈;
   });
 
-  if (찾은항목.수량 <= 0) {
-    찾은항목.수량 = 0;
+  if (찾은항목.주문수량 <= 0) {
+    찾은항목.주문수량 = 0;
     return copy;
   }
-  찾은항목.수량--;
+  찾은항목.주문수량--;
   return copy;
 }
 
