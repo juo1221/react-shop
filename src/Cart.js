@@ -27,7 +27,7 @@ let Cart = memo(function (props) {
                   <td>{상품.상품명}</td>
                   <td>{상품.가격} </td>
                   <td>{상품.사이즈} </td>
-                  <td>{상품.수량} </td>
+                  <td>{상품.주문수량} </td>
 
                   <td>
                     <button
@@ -35,7 +35,11 @@ let Cart = memo(function (props) {
                       onClick={() => {
                         props.dispatch({
                           type: "수량증가",
-                          데이터: { id: 상품.id, 사이즈: 상품.사이즈 },
+                          데이터: {
+                            id: 상품.id,
+                            사이즈: 상품.사이즈,
+                            남은재고: props.재고,
+                          },
                         });
                       }}
                     >
