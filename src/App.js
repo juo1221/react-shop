@@ -84,9 +84,6 @@ function App() {
             <Nav.Link as={Link} to="/최근본상품">
               최근 본 상품
             </Nav.Link>
-            <Nav.Link as={Link} to="/location">
-              위치
-            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
@@ -179,9 +176,9 @@ function App() {
             버튼숨김변경={버튼숨김변경}
           />
         </Route>
-        <Route path="/location">
+        {/* <Route path="/location">
           <Location />
-        </Route>
+        </Route> */}
       </Switch>
     </div>
   );
