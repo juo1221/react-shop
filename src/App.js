@@ -66,7 +66,7 @@ function App() {
       <Navbar bg="light" expand="lg">
         <Navbar.Brand>
           <Link to="/" className="Navbar__logo">
-            ShoesShop
+            PAUL JOCK
           </Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -94,10 +94,9 @@ function App() {
       <Switch>
         <Route exact path="/">
           <Jumbotron className="main__background ">
-            <h1 style={{ fontSize: "100px" }}>신발팝니다.</h1>
-            <h2>나이키</h2>
-            <h2>아디다스</h2>
-            <h2>다팔아여</h2>
+            <h1 style={{ fontSize: "100px" }}>PAUL JOCK</h1>
+            <h2>새신을 신고 뛰어보자 </h2>
+            <h4> run in our new shoes.</h4>
           </Jumbotron>
           <div className="container">
             <div className="row">
