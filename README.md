@@ -1,70 +1,98 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
 
-In the project directory, you can run:
 
-### `npm start`
+### Shoes Shop shopping page 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+> 페이지 구성
+>
+> - 홈
+> - 상세페이지
+> - 장바구니
+> - 최근 본 상품
 
-### `npm run build`
+<br/>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 홈 | 메인 페이지
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+1. 더보기 버튼 클릭 전 : 기본으로 3개상품만 보입니다.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<img width="831" alt="스크린샷 2021-07-09 오후 7 44 07" src="https://user-images.githubusercontent.com/79268108/125071463-43db0000-e0f4-11eb-92d2-8d4bd795d23e.png">
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+2. 더보기 버튼 클릭 후 : 3개가 추가돼서 6개 상품이 보입니다. + 더보기 버튼은 사라집니다.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+<img width="829" alt="스크린샷 2021-07-09 오후 7 49 25" src="https://user-images.githubusercontent.com/79268108/125071451-3e7db580-e0f4-11eb-8350-44f31bdb2752.png">
 
-## Learn More
+해당하는 이미지를 클릭 하면 상세페이지로 이동합니다. 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+<br/>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 상세페이지 | 클릭한 상품에 대한 상세 정보가 있는 페이지
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+<img width="834" alt="스크린샷 2021-07-09 오후 7 53 22" src="https://user-images.githubusercontent.com/79268108/125071466-44739680-e0f4-11eb-9f69-7b5efbea54f4.png">
 
-### Making a Progressive Web App
+ 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- 사이즈선택 : 각 상품에대해 S M L 사이즈로 선택할 수 있습니다. 기본값은 S 입니다.
+- 뒤로가기 : 현재 상품보다 앞에있는 상품을 확인 할 수 있습니다
+  <span style="color:lightGrey">첫 페이지라면 동작하지 않습니다. </span>
 
-### Advanced Configuration
+- 주문하기 : 사이즈를 선택한 정보를 가지고 장바구니 페이지로 이동하게 됩니다.
+- 다음상품 : 현재 상품보다 뒤에있는 상품을 확인 할 수 있습니다.
+  <span style="color:lightGrey">마지막 페이지라면 동작하지 않습니다. </span>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+<br/>
 
-### Deployment
+### 장바구니 | 주문한 상품에 대한 테이블이 있는 페이지
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+<img width="831" alt="스크린샷 2021-07-09 오후 7 59 02" src="https://user-images.githubusercontent.com/79268108/125071469-450c2d00-e0f4-11eb-8503-5fd1d181101e.png">
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- 변경 : 0개 ~ 상품에 정해진 수량까지 수량을 변경할 수 있습니다. 
+  - 만약 a라는 상품이 장바구니에 올라온 상태에서 다시 같은 상품을 주문한다면 수량이 1 증가하게 됩니다. 
+  - 만약 a라는 상품이 장바구니에 올라온 상태에서 다른 사이즈의 상품을 주문한다면 장바구니에 새로 등록 됩니다. 
+
+- 삭제 : 해당 상품을 장바구니에서 삭제합니다. 
+
+- 정렬 : 상품의 아이디 (#) 를 오름차순 기준으로 정렬합니다.
+  - 만약 같은 상품에 사이즈만 다를경우 정렬을 하게되면 사이즈의 영문자를 오름차순 기준으로 정렬합니다. 
+
+
+<br/>
+
+
+### 최근 본 상품 | 조회한 상품을 모아놓은 페이지
+
+---
+
+
+
+- 상품을 조회하지 않은 경우 : 아래와 같은 문구가 나옵니다. 
+
+
+  
+  <img width="823" alt="스크린샷 2021-07-09 오후 8 17 30" src="https://user-images.githubusercontent.com/79268108/125071470-450c2d00-e0f4-11eb-902e-9bcbb52b5ecb.png">
+
+- 상품을 조회한 경우 : 구매하기 버튼을 누르면 다시 해당상품에 대한 상세 페이지로 이동합니다. 
+
+
+  
+  <img width="830" alt="스크린샷 2021-07-09 오후 8 19 09" src="https://user-images.githubusercontent.com/79268108/125071475-476e8700-e0f4-11eb-8d6a-bdcf6adea2eb.png">
+
+  
+
+ 
+
